@@ -9,6 +9,11 @@ class JYUtil:
         for attrs in inspect.getmembers(class_or_object):
             if len(attrs) == 2 and attrs[0] == "__annotations__":
                 for attr_name in attrs[1]:
-                    name_and_data_type[attr_name] = attrs[1][attr_name].__name__
+                    data_type = None
+                    try:
+                        data_type = attrs[1][attr_name].__name__
+                    except:
+                        pass
+                    name_and_data_type[attr_name] = data_type
                 break
         return name_and_data_type
