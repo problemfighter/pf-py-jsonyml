@@ -1,0 +1,2 @@
+class JYBase(object):
+    pass
