@@ -7,7 +7,7 @@ from pf_py_jsonyml.object_dict import ObjectDict
 class Degree(JYBase):
     name: str
 
-    def __init__(self, name):
+    def __init__(self, name=None):
         self.name = name
 
     def get_globals(self):

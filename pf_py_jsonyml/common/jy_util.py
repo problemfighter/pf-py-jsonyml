@@ -9,6 +9,7 @@ class JYDataType:
     collection: str
     objectType: str
     dictKeyType: str
+    collectionClass: str
 
 
 class JYUtil:
@@ -65,6 +66,7 @@ class JYUtil:
             data_type.dictKeyType = key_value[0].strip()
             object_type = key_value[1].strip()
         object_type = object_type.replace("__main__.", "")
+        data_type.collectionClass = object_type
         data_type.objectType = JYUtil.get_object_info(object_type, class_object)
         return data_type
 

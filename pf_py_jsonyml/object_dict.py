@@ -40,18 +40,42 @@ class ObjectDict:
             response_dict[field_name] = data
         return response_dict
 
+    def _init_jy_object(self, data, class_name, data_object: JYBase):
+        jy_base_object = JYUtil.get_py_base_class_object(class_name, data_object)
+        if jy_base_object:
+            return self.get_object(data, jy_base_object)
+        return None
+
+    def _init_jy_list_object(self, data_list: list, class_name, data_object: JYBase):
+        jy_object_list = []
+        for data in data_list:
+            response = self._init_jy_object(data, class_name, data_object)
+            if response:
+                jy_object_list.append(response)
+        if jy_object_list:
+            return jy_object_list
+        return None
+
+    def _init_jy_dict_object(self, data_dict: dict, class_name, data_object: JYBase):
+        jy_object_dict = {}
+        for data_name in data_dict:
+            response = self._init_jy_object(data_dict[data_name], class_name, data_object)
+            if response:
+                jy_object_dict[data_name] = response
+        if jy_object_dict:
+            return jy_object_dict
+        return None
+
     def _set_value_to_object(self, data_name: str, data: dict, data_and_type_map: dict, data_object: JYBase):
         if data_name in data_and_type_map:
             jy_data_type: JYDataType = data_and_type_map[data_name]
             value = None
-            if jy_data_type.name == "Dict" and jy_data_type.objectType == "JYBase":
-                pass
-            elif jy_data_type.name == "List" and jy_data_type.objectType == "JYBase":
-                pass
+            if jy_data_type.name == "Dict" and jy_data_type.objectType == "JYBase" and isinstance(data[data_name], dict) and jy_data_type.collectionClass:
+                value = self._init_jy_dict_object(data[data_name], jy_data_type.collectionClass, data_object)
+            elif jy_data_type.name == "List" and jy_data_type.objectType == "JYBase" and isinstance(data[data_name], list) and jy_data_type.collectionClass:
+                value = self._init_jy_list_object(data[data_name], jy_data_type.collectionClass, data_object)
             elif jy_data_type.objectType == "JYBase":
-                jy_base_object = JYUtil.get_py_base_class_object(jy_data_type.name, data_object)
-                if jy_base_object:
-                    value = self.get_object(data[data_name], jy_base_object)
+                value = self._init_jy_object(data[data_name], jy_data_type.name, data_object)
             else:
                 value = data[data_name]
             setattr(data_object, data_name, value)
