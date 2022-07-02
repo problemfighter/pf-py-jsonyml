@@ -39,3 +39,16 @@ class ObjectDict:
                 data = self._process_value(data)
             response_dict[field_name] = data
         return response_dict
+
+    def _get_attrs_value(self, name, data: dict, data_object: JYBase):
+        if hasattr(data_object, name):
+            return data[name]
+        return None
+
+    def get_object(self, data: dict, data_object: JYBase):
+        if not data or not data_object:
+            return None
+        data_and_type_map = JYUtil.get_class_attrs(data_object)
+        # for item_name in data:
+        #     setattr(data_object, item_name, self._get_attrs_value(item_name, data, data_object))
+        return data_object

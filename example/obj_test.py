@@ -1,3 +1,4 @@
+import sys
 from typing import List, Dict
 from pf_py_jsonyml.jybase import JYBase
 from pf_py_jsonyml.object_dict import ObjectDict
@@ -9,6 +10,9 @@ class Degree(JYBase):
     def __init__(self, name):
         self.name = name
 
+    def get_globals(self):
+        return globals()
+
 
 class Address(JYBase):
     country: str
@@ -16,15 +20,21 @@ class Address(JYBase):
     def __init__(self, country: str = None):
         self.country = country
 
+    def get_globals(self):
+        return globals()
+
 
 class Profile(JYBase):
     gender: str
     mobile: str
-    address: Address
+    address: Address = Address
 
-    def __init__(self, gender: str, mobile: str):
+    def __init__(self, gender: str = None, mobile: str = None):
         self.gender = gender
         self.mobile = mobile
+
+    def get_globals(self):
+        return globals()
 
 
 class Person(JYBase):
@@ -38,6 +48,9 @@ class Person(JYBase):
     simpleList: list
     simpleDict: dict
     otherAddress: Dict[str, Address]
+
+    def get_globals(self):
+        return globals()
 
 
 person1 = Person()
@@ -54,4 +67,30 @@ person1.otherAddress = {"home": Address("Bangladesh"), "office": Address("Canada
 
 
 object_dict = ObjectDict()
-print(object_dict.get_dict(person1))
+# print(object_dict.get_dict(person1))
+
+dict_object = {
+    'id': 1,
+    'firstName': 'Touhid',
+    'lastName': 'Mia',
+    'salary': 10000,
+    'isMarried': True,
+    'profile': {
+        'gender': 'Male', 'mobile': '1234', 'address': None
+    },
+    'degrees': [
+        {'name': 'Primary'},
+        {'name': 'Secondary'},
+        {'name': 'Bsc'}
+    ],
+    'simpleList': ['A', 'B', 'C', 'D'],
+    'simpleDict': {'a': 'A', 'b': 'B'},
+    'otherAddress': {
+        'home': {'country': 'Bangladesh'},
+        'office': {'country': 'Canada'}
+    }
+}
+
+print(sys.modules[__name__])
+person_object: Person = object_dict.get_object(dict_object, Person())
+print(person_object)
