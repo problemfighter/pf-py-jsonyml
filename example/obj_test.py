@@ -1,4 +1,3 @@
-import sys
 from typing import List, Dict
 from pf_py_jsonyml.jybase import JYBase
 from pf_py_jsonyml.object_dict import ObjectDict
@@ -27,7 +26,7 @@ class Address(JYBase):
 class Profile(JYBase):
     gender: str
     mobile: str
-    address: Address = Address
+    address: Address
 
     def __init__(self, gender: str = None, mobile: str = None):
         self.gender = gender
@@ -67,7 +66,7 @@ person1.otherAddress = {"home": Address("Bangladesh"), "office": Address("Canada
 
 
 object_dict = ObjectDict()
-# print(object_dict.get_dict(person1))
+print(object_dict.get_dict(person1))
 
 dict_object = {
     'id': 1,
@@ -91,6 +90,5 @@ dict_object = {
     }
 }
 
-print(sys.modules[__name__])
 person_object: Person = object_dict.get_object(dict_object, Person())
 print(person_object)

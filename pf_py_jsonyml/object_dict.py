@@ -35,7 +35,7 @@ class ObjectDict:
         for field_name in data_and_type_map:
             data = None
             if hasattr(data_object, field_name):
-                data = getattr(data_object, field_name)
+                data = getattr(data_object, field_name, None)
                 data = self._process_value(data)
             response_dict[field_name] = data
         return response_dict
