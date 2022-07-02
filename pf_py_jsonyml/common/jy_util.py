@@ -27,6 +27,17 @@ class JYUtil:
         return None
 
     @staticmethod
+    def get_py_base_class_object(attr_name, class_object: JYBase):
+        try:
+            if hasattr(class_object, "get_globals") and attr_name in class_object.get_globals():
+                class_object = class_object.get_globals()[attr_name]()
+                if class_object:
+                    return class_object
+        except:
+            return None
+        return None
+
+    @staticmethod
     def get_object_info(data_type, original_object):
         if data_type in ["list", "dict", "str", "int", "float", "bool"]:
             return "primitive"

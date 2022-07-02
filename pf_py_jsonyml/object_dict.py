@@ -49,11 +49,12 @@ class ObjectDict:
             elif jy_data_type.name == "List" and jy_data_type.objectType == "JYBase":
                 pass
             elif jy_data_type.objectType == "JYBase":
-                pass
+                jy_base_object = JYUtil.get_py_base_class_object(jy_data_type.name, data_object)
+                if jy_base_object:
+                    value = self.get_object(data[data_name], jy_base_object)
             else:
                 value = data[data_name]
-            if value:
-                setattr(data_object, data_name, value)
+            setattr(data_object, data_name, value)
         return data_object
 
     def get_object(self, data: dict, data_object: JYBase):
