@@ -1,8 +1,6 @@
 import inspect
 import re
-import sys
 from typing import get_origin
-import typing
 from pf_py_jsonyml.jybase import JYBase
 
 

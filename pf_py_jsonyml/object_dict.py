@@ -1,4 +1,4 @@
-from pf_py_jsonyml.common.jy_util import JYUtil
+from pf_py_jsonyml.common.jy_util import JYUtil, JYDataType
 from pf_py_jsonyml.jybase import JYBase
 from typing import List, Dict
 
@@ -40,15 +40,26 @@ class ObjectDict:
             response_dict[field_name] = data
         return response_dict
 
-    def _get_attrs_value(self, name, data: dict, data_object: JYBase):
-        if hasattr(data_object, name):
-            return data[name]
-        return None
+    def _set_value_to_object(self, data_name: str, data: dict, data_and_type_map: dict, data_object: JYBase):
+        if data_name in data_and_type_map:
+            jy_data_type: JYDataType = data_and_type_map[data_name]
+            value = None
+            if jy_data_type.name == "Dict" and jy_data_type.objectType == "JYBase":
+                pass
+            elif jy_data_type.name == "List" and jy_data_type.objectType == "JYBase":
+                pass
+            elif jy_data_type.objectType == "JYBase":
+                pass
+            else:
+                value = data[data_name]
+            if value:
+                setattr(data_object, data_name, value)
+        return data_object
 
     def get_object(self, data: dict, data_object: JYBase):
         if not data or not data_object:
             return None
         data_and_type_map = JYUtil.get_class_attrs(data_object)
-        # for item_name in data:
-        #     setattr(data_object, item_name, self._get_attrs_value(item_name, data, data_object))
+        for item_name in data:
+            data_object = self._set_value_to_object(item_name, data=data, data_and_type_map=data_and_type_map, data_object=data_object)
         return data_object
