@@ -91,4 +91,7 @@ class ObjectDict:
         data_and_type_map = JYUtil.get_class_attrs(data_object)
         for item_name in data:
             data_object = self._set_value_to_object(item_name, data=data, data_and_type_map=data_and_type_map, data_object=data_object)
+        for attr in data_and_type_map:
+            if not hasattr(data_object, attr):
+                setattr(data_object, attr, None)
         return data_object
