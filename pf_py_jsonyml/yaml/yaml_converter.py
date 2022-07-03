@@ -27,14 +27,14 @@ class YamlConverter:
             return self.dict_to_yaml(dict_data)
         return None
 
-    def yaml_to_object(self, yaml_content: str, data_object: JYBase) -> Union[JYBase, None]:
+    def yaml_to_object(self, yaml_content: str, data_object: JYBase, default=None) -> Union[JYBase, None]:
         dict_data = self.yaml_to_dict(yaml_content)
         if dict_data:
             return self.object_dict.get_object(dict_data, data_object)
-        return None
+        return default
 
     def write_yaml_object_to_file(self, file_path_with_name: str, data_object: JYBase) -> bool:
-        if not file_path_with_name or data_object:
+        if not file_path_with_name or not data_object:
             return False
 
         try:
@@ -59,6 +59,6 @@ class YamlConverter:
         try:
             stream = open(file_path_with_name, 'r', encoding="utf-8")
             yaml_content = stream.read()
-            return self.yaml_to_object(yaml_content, data_object)
+            return self.yaml_to_object(yaml_content, data_object, default=default)
         except Exception as e:
             return default

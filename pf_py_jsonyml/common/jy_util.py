@@ -65,7 +65,9 @@ class JYUtil:
             key_value = object_type.split(",")
             data_type.dictKeyType = key_value[0].strip()
             object_type = key_value[1].strip()
-        object_type = object_type.replace("__main__.", "")
+        object_type_split = object_type.rsplit(".", 1)
+        if len(object_type_split) >= 2:
+            object_type = object_type_split[1].strip()
         data_type.collectionClass = object_type
         data_type.objectType = JYUtil.get_object_info(object_type, class_object)
         return data_type
