@@ -5,39 +5,43 @@ from typing import List, Dict
 
 class ObjectDict:
 
-    def _process_value(self, data):
+    def _process_value(self, data, is_ignore_none=False):
         if not data:
             return data
         if isinstance(data, JYBase):
-            data = self.get_dict(data)
+            data = self.get_dict(data, is_ignore_none)
         elif isinstance(data, List):
-            data = self._handle_internal_list(data)
+            data = self._handle_internal_list(data, is_ignore_none=is_ignore_none)
         elif isinstance(data, Dict):
-            data = self._handle_internal_dict(data)
+            data = self._handle_internal_dict(data, is_ignore_none=is_ignore_none)
         return data
 
-    def _handle_internal_list(self, list_data):
+    def _handle_internal_list(self, list_data, is_ignore_none=False):
         response = []
         for item in list_data:
-            item = self._process_value(item)
+            item = self._process_value(item, is_ignore_none)
             response.append(item)
         return response
 
-    def _handle_internal_dict(self, dict_data):
+    def _handle_internal_dict(self, dict_data, is_ignore_none=False):
         response = {}
         for item_name in dict_data:
-            response[item_name] = self._process_value(dict_data[item_name])
+            response[item_name] = self._process_value(dict_data[item_name], is_ignore_none)
         return response
 
-    def get_dict(self, data_object: JYBase):
+    def get_dict(self, data_object: JYBase, is_ignore_none=False):
         response_dict = {}
         data_and_type_map = JYUtil.get_class_attrs(data_object)
         for field_name in data_and_type_map:
             data = None
             if hasattr(data_object, field_name):
                 data = getattr(data_object, field_name, None)
-                data = self._process_value(data)
-            response_dict[field_name] = data
+                data = self._process_value(data, is_ignore_none)
+
+            if not is_ignore_none:
+                response_dict[field_name] = data
+            elif is_ignore_none and data:
+                response_dict[field_name] = data
         return response_dict
 
     def _init_jy_object(self, data, class_name, data_object: JYBase):

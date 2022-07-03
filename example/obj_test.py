@@ -67,7 +67,7 @@ person1.otherAddress = {"home": Address("Bangladesh"), "office": Address("Canada
 
 
 object_dict = ObjectDict()
-print(object_dict.get_dict(person1))
+print(object_dict.get_dict(person1, is_ignore_none=True))
 
 dict_object = {
     'id': 1,

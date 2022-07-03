@@ -21,8 +21,8 @@ class YamlConverter:
         except Exception as e:
             return default
 
-    def object_to_yaml(self, data_object: JYBase) -> Union[str, None]:
-        dict_data = self.object_dict.get_dict(data_object)
+    def object_to_yaml(self, data_object: JYBase, is_ignore_none=False) -> Union[str, None]:
+        dict_data = self.object_dict.get_dict(data_object, is_ignore_none=is_ignore_none)
         if dict_data:
             return self.dict_to_yaml(dict_data)
         return None
@@ -33,7 +33,7 @@ class YamlConverter:
             return self.object_dict.get_object(dict_data, data_object)
         return default
 
-    def write_yaml_object_to_file(self, file_path_with_name: str, data_object: JYBase) -> bool:
+    def write_yaml_object_to_file(self, file_path_with_name: str, data_object: JYBase, is_ignore_none=False) -> bool:
         if not file_path_with_name or not data_object:
             return False
 
@@ -41,7 +41,7 @@ class YamlConverter:
             if exists(file_path_with_name):
                 os.remove(file_path_with_name)
 
-            yaml_content = self.object_to_yaml(data_object)
+            yaml_content = self.object_to_yaml(data_object, is_ignore_none)
             if not yaml_content:
                 return False
 
