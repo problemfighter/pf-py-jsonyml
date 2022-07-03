@@ -1,6 +1,7 @@
 from typing import List, Dict
 from pf_py_jsonyml.jybase import JYBase
 from pf_py_jsonyml.object_dict import ObjectDict
+from pf_py_jsonyml.yaml.yaml_converter import YamlConverter
 
 
 class Degree(JYBase):
@@ -92,3 +93,42 @@ dict_object = {
 
 person_object: Person = object_dict.get_object(dict_object, Person())
 print(person_object)
+
+
+# YAML Conversion testing
+yaml_converter = YamlConverter()
+response = yaml_converter.object_to_yaml(person_object)
+print(response)
+
+yaml_content = """
+id: 1
+firstName: Touhid
+lastName: Mia
+salary: 10000
+isMarried: true
+profile:
+  gender: Male
+  mobile: '1234'
+  address: null
+degrees:
+- name: Primary
+- name: Secondary
+- name: Bsc
+simpleList:
+- A
+- B
+- C
+- D
+simpleDict:
+  a: A
+  b: B
+otherAddress:
+  home:
+    country: Bangladesh
+  office:
+    country: Canada
+"""
+
+person_yaml = Person()
+response = yaml_converter.yaml_to_object(yaml_content, person_yaml)
+print(response)
