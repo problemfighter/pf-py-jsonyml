@@ -101,3 +101,4 @@ class JYUtil:
                     name_and_data_type[attr_name] = data_type
                 break
         return name_and_data_type
+
