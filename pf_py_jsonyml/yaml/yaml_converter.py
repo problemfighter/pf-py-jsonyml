@@ -38,12 +38,12 @@ class YamlConverter:
             return False
 
         try:
-            if exists(file_path_with_name):
-                os.remove(file_path_with_name)
-
             yaml_content = self.object_to_yaml(data_object, is_ignore_none)
             if not yaml_content:
                 return False
+
+            if exists(file_path_with_name):
+                os.remove(file_path_with_name)
 
             stream = open(file_path_with_name, 'w', encoding="utf-8")
             stream.write(yaml_content)
