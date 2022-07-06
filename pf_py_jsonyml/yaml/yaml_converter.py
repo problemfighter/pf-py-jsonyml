@@ -11,7 +11,7 @@ class YamlConverter:
 
     def dict_to_yaml(self, data: dict) -> Union[str, None]:
         try:
-            return yaml.dump(data, sort_keys=False)
+            return yaml.dump(data, sort_keys=False, allow_unicode=True)
         except Exception as e:
             return None
 
