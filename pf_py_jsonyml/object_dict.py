@@ -82,6 +82,10 @@ class ObjectDict:
                 value = self._init_jy_object(data[data_name], jy_data_type.name, data_object)
             else:
                 value = data[data_name]
+
+            if value and jy_data_type.name == "str":
+                value = str(value)
+
             setattr(data_object, data_name, value)
         return data_object
 
