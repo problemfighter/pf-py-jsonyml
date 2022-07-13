@@ -62,3 +62,16 @@ class YamlConverter:
             return self.yaml_to_object(yaml_content, data_object, default=default)
         except Exception as e:
             return default
+
+    def validate_yaml(self, yaml_content):
+        try:
+            return yaml.safe_load(yaml_content)
+        except yaml.YAMLError as exception:
+            raise exception
+
+    def is_validate_yaml(self, yaml_content) -> bool:
+        try:
+            self.validate_yaml(yaml_content)
+            return True
+        except yaml.YAMLError as exception:
+            return False
