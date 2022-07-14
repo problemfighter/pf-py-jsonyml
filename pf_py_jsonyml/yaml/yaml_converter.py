@@ -1,5 +1,5 @@
 import os
-from os.path import exists
+from os.path import exists, dirname
 from typing import Union
 import yaml
 from pf_py_jsonyml.jybase import JYBase
@@ -37,13 +37,32 @@ class YamlConverter:
         if not file_path_with_name or not data_object:
             return False
 
-        try:
-            yaml_content = self.object_to_yaml(data_object, is_ignore_none)
-            if not yaml_content:
-                return False
+        yaml_content = self.object_to_yaml(data_object, is_ignore_none)
+        if not yaml_content:
+            return False
+        return self.write_yaml_content_to_file(file_path_with_name, yaml_content)
 
+    def write_yaml_dict_to_file(self, file_path_with_name: str, data_dict: dict) -> bool:
+
+        if not file_path_with_name or not data_dict:
+            return False
+
+        yaml_content = self.dict_to_yaml(data_dict)
+        if not yaml_content:
+            return False
+        return self.write_yaml_content_to_file(file_path_with_name, yaml_content)
+
+    def write_yaml_content_to_file(self, file_path_with_name: str, yaml_content: str) -> bool:
+        if not file_path_with_name:
+            return False
+
+        try:
             if exists(file_path_with_name):
                 os.remove(file_path_with_name)
+
+            directory = dirname(file_path_with_name)
+            if not os.path.exists(directory):
+                os.makedirs(directory)
 
             stream = open(file_path_with_name, 'w', encoding="utf-8")
             stream.write(yaml_content)
@@ -53,13 +72,20 @@ class YamlConverter:
             return False
 
     def read_yaml_object_from_file(self, file_path_with_name: str, data_object: JYBase, default=None) -> Union[JYBase, None]:
+        yaml_content = self.read_yaml_content_from_file(file_path_with_name)
+        return self.yaml_to_object(yaml_content, data_object, default=default)
+
+    def read_yaml_dict_from_file(self, file_path_with_name: str, default=None) -> Union[JYBase, None]:
+        yaml_content = self.read_yaml_content_from_file(file_path_with_name)
+        return self.yaml_to_dict(yaml_content, default=default)
+
+    def read_yaml_content_from_file(self, file_path_with_name: str, default=None) -> Union[str, None]:
         if not exists(file_path_with_name):
             return default
 
         try:
             stream = open(file_path_with_name, 'r', encoding="utf-8")
-            yaml_content = stream.read()
-            return self.yaml_to_object(yaml_content, data_object, default=default)
+            return stream.read()
         except Exception as e:
             return default
 
