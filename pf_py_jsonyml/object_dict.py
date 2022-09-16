@@ -33,6 +33,8 @@ class ObjectDict:
         response_dict = {}
         data_and_type_map = JYUtil.get_class_attrs(data_object)
         for field_name in data_and_type_map:
+            if exclude and field_name in exclude:
+                continue
             data = None
             if hasattr(data_object, field_name):
                 data = getattr(data_object, field_name, None)
